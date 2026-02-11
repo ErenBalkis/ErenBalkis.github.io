@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <!-- Meta Information -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Eren Balkış - Computer Science Student Portfolio Website">
+    <title>Eren Balkış | Portfolio</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Tailwind Theme Configuration
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: { DEFAULT: '#0a192f', light: '#112240', lighter: '#1d3461' },
+                        neon: '#64ffda',
+                        slate: { light: '#ccd6f6', DEFAULT: '#8892b0' },
+                        purple: { glow: '#a855f7' }
+                    },
+                    fontFamily: {
+                        mono: ['"JetBrains Mono"', '"Fira Code"', 'monospace'],
+                        sans: ['Inter', 'Roboto', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <style>
+        /* General body style */
+        body {
+            background-color: #020c1b;
+            color: #ccd6f6;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Neon glow effect */
+        .glow {
+            text-shadow: 0 0 10px rgba(100, 255, 218, 0.5), 0 0 40px rgba(100, 255, 218, 0.15);
+        }
+
+        .glow-box {
+            box-shadow: 0 0 15px rgba(100, 255, 218, 0.15), inset 0 0 15px rgba(100, 255, 218, 0.05);
+        }
+
+        .glow-purple {
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+        }
+
+        /* Glassmorphism effect */
+        .glass {
+            background: rgba(10, 25, 47, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+        }
+
+        /* Typewriter cursor animation */
+        .cursor-blink {
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* Scrollbar style */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #020c1b;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1d3461;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64ffda;
+        }
+
+        /* Card hover animation */
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(100, 255, 218, 0.1);
+        }
+
+        /* Section transition animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.7s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Skill tag hover */
+        .skill-tag {
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            background: rgba(100, 255, 218, 0.15);
+            transform: scale(1.05);
+            box-shadow: 0 0 12px rgba(100, 255, 218, 0.2);
+        }
+
+        /* Terminal dot pulse */
+        .terminal-dot {
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: 0.4
+            }
+        }
+
+        /* CV Dropdown */
+        .cv-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .cv-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            min-width: 180px;
+            background: rgba(10, 25, 47, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(100, 255, 218, 0.1);
+        }
+
+        .cv-dropdown-menu.show {
+            display: block;
+            animation: dropdownFade 0.2s ease;
+        }
+
+        @keyframes dropdownFade {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cv-dropdown-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #8892b0;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .cv-dropdown-menu a:hover {
+            background: rgba(100, 255, 218, 0.1);
+            color: #64ffda;
+        }
+
+        .cv-dropdown-menu a+a {
+            border-top: 1px solid rgba(100, 255, 218, 0.1);
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- ========== NAVIGATION BAR ========== -->
+    <nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#hero" class="font-mono text-xl font-bold text-neon glow tracking-wider">&lt;EB /&gt;</a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#about" class="font-mono text-sm text-slate hover:text-neon transition-colors">// About</a>
+                <a href="#education" class="font-mono text-sm text-slate hover:text-neon transition-colors">//
+                    Education</a>
+                <a href="#skills" class="font-mono text-sm text-slate hover:text-neon transition-colors">// Skills</a>
+                <a href="#projects" class="font-mono text-sm text-slate hover:text-neon transition-colors">//
+                    Projects</a>
+                <a href="#certificates" class="font-mono text-sm text-slate hover:text-neon transition-colors">//
+                    Certificates</a>
+                <a href="#contact" class="font-mono text-sm text-slate hover:text-neon transition-colors">// Contact</a>
+                <div class="cv-dropdown">
+                    <button id="cvDropdownBtn"
+                        class="font-mono text-sm border border-neon text-neon px-4 py-2 rounded hover:bg-neon/10 transition-all cursor-pointer bg-transparent">Download
+                        CV <i class="fas fa-download ml-1"></i></button>
+                    <div id="cvDropdownMenu" class="cv-dropdown-menu">
+                        <a href="ErenBalkis_Ozgecmis.pdf" download="ErenBalkis_Ozgecmis.pdf"><i class="fas fa-flag"
+                                style="color:#e30a17"></i> Türkçe</a>
+                        <a href="ErenBalkis's-Resume.pdf" download="ErenBalkis's-Resume.pdf"><i class="fas fa-flag"
+                                style="color:#3c3b6e"></i> English</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="menuBtn" class="md:hidden text-neon text-2xl"><i class="fas fa-bars"></i></button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden glass px-6 pb-6">
+            <a href="#about" class="block py-2 font-mono text-sm text-slate hover:text-neon">// About</a>
+            <a href="#education" class="block py-2 font-mono text-sm text-slate hover:text-neon">// Education</a>
+            <a href="#skills" class="block py-2 font-mono text-sm text-slate hover:text-neon">// Skills</a>
+            <a href="#projects" class="block py-2 font-mono text-sm text-slate hover:text-neon">// Projects</a>
+            <a href="#certificates" class="block py-2 font-mono text-sm text-slate hover:text-neon">// Certificates</a>
+            <a href="#contact" class="block py-2 font-mono text-sm text-slate hover:text-neon">// Contact</a>
+            <div class="cv-dropdown">
+                <button id="cvDropdownBtnMobile"
+                    class="inline-block mt-2 font-mono text-sm border border-neon text-neon px-4 py-2 rounded cursor-pointer bg-transparent">Download
+                    CV <i class="fas fa-download ml-1"></i></button>
+                <div id="cvDropdownMenuMobile" class="cv-dropdown-menu" style="left:0; right:auto;">
+                    <a href="ErenBalkis_Ozgecmis.pdf" download="ErenBalkis_Ozgecmis.pdf"><i class="fas fa-flag"
+                            style="color:#e30a17"></i> Türkçe</a>
+                    <a href="ErenBalkis's-Resume.pdf" download="ErenBalkis's-Resume.pdf"><i class="fas fa-flag"
+                            style="color:#3c3b6e"></i> English</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== HERO SECTION ========== -->
+    <section id="hero" class="min-h-screen flex items-center justify-center relative overflow-hidden">
+        <!-- Background particle effect -->
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-neon/10 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-glow/10 rounded-full blur-3xl"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center relative z-10">
+            <div class="order-2 md:order-1">
+                <p class="font-mono text-neon text-sm mb-4 tracking-wider">// hello, world</p>
+                <h1 class="font-mono text-4xl md:text-5xl lg:text-6xl font-bold text-slate-light leading-tight mb-4">
+                    Hi, I'm<br><span class="text-neon glow">Eren Balkış.</span>
+                </h1>
+                <h2 class="font-mono text-2xl md:text-3xl text-slate font-semibold mb-6">Software Developer | AI & ML
+                    Enthusiast.</h2>
+
+                <!-- Typewriter effect area -->
+                <div class="font-mono text-lg text-slate mb-8 h-8">
+                    <span id="typewriter"></span><span class="cursor-blink text-neon">|</span>
+                </div>
+
+                <div class="flex gap-4 flex-wrap">
+                    <a href="#projects"
+                        class="font-mono bg-transparent border-2 border-neon text-neon px-6 py-3 rounded-lg hover:bg-neon/10 transition-all text-sm">
+                        View Projects <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                    <a href="#contact"
+                        class="font-mono bg-neon/10 border-2 border-neon/30 text-neon px-6 py-3 rounded-lg hover:bg-neon/20 transition-all text-sm">
+                        Get in Touch <i class="fas fa-envelope ml-2"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Profile image area -->
+            <div class="order-1 md:order-2 flex justify-center">
+                <div class="relative">
+                    <div
+                        class="w-64 h-64 md:w-80 md:h-80 rounded-2xl border-2 border-neon/30 overflow-hidden glow-box relative z-10 bg-navy-light">
+                        <img src="takım.png" alt="Eren Balkış" class="w-full h-full object-cover"
+                            onerror="this.style.display='none'; this.parentElement.innerHTML+='<div class=\'flex items-center justify-center w-full h-full\' ><span class=\'font-mono text-6xl text-neon glow\'>EB</span></div>'">
+                    </div>
+                    <div class="absolute -inset-2 rounded-2xl border border-neon/20 -z-0"></div>
+                    <div
+                        class="absolute -bottom-4 -right-4 w-full h-full rounded-2xl border border-purple-glow/20 -z-10">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== ABOUT ME SECTION ========== -->
+    <section id="about" class="py-24 fade-in">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="font-mono text-3xl font-bold text-slate-light mb-2"><span class="text-neon">01.</span> About Me
+            </h2>
+            <div class="w-24 h-0.5 bg-neon/50 mb-12"></div>
+
+            <div class="grid md:grid-cols-2 gap-12 items-start">
+                <div class="space-y-4 text-slate leading-relaxed">
+                    <p>Hi! I'm <span class="text-neon">Eren Balkış</span>, a 3rd-year Computer Science student at
+                        Istanbul University.</p>
+                    <p>I'm deeply passionate about algorithms, software engineering, and artificial intelligence. I'm
+                        constantly improving myself, especially in <span class="text-neon">machine learning</span>,
+                        <span class="text-neon">artificial intelligence</span>, and <span
+                            class="text-neon">object-oriented programming</span>.
+                    </p>
+                    <p>I aim to solve problems with an analytical mindset and develop innovative projects. My greatest
+                        motivation is creating solutions to real-world problems through the power of technology.</p>
+                </div>
+
+                <!-- Terminal-style box -->
+                <div class="bg-navy rounded-lg border border-navy-lighter overflow-hidden glow-box">
+                    <div class="flex items-center gap-2 px-4 py-3 bg-navy-light border-b border-navy-lighter">
+                        <span class="w-3 h-3 rounded-full bg-red-500 terminal-dot"></span>
+                        <span class="w-3 h-3 rounded-full bg-yellow-500 terminal-dot"
+                            style="animation-delay:0.3s"></span>
+                        <span class="w-3 h-3 rounded-full bg-green-500 terminal-dot"
+                            style="animation-delay:0.6s"></span>
+                        <span class="font-mono text-xs text-slate ml-2">eren@portfolio:~</span>
+                    </div>
+                    <div class="p-5 font-mono text-sm space-y-2">
+                        <p><span class="text-neon">$</span> cat about.txt</p>
+                        <p class="text-slate">├── Name: <span class="text-slate-light">Eren Balkış</span></p>
+                        <p class="text-slate">├── Location: <span class="text-slate-light">Istanbul, Turkey</span></p>
+                        <p class="text-slate">├── University: <span class="text-slate-light">Istanbul University</span>
+                        </p>
+                        <p class="text-slate">├── Major: <span class="text-slate-light">Computer Science</span></p>
+                        <p class="text-slate">├── Year: <span class="text-neon">3rd Year</span></p>
+                        <p class="text-slate">└── Interests: <span class="text-purple-glow">ML, AI, OOP</span></p>
+                        <p class="mt-3"><span class="text-neon">$</span> <span class="cursor-blink">_</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== EDUCATION SECTION ========== -->
+    <section id="education" class="py-24 bg-navy/50 fade-in">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="font-mono text-3xl font-bold text-slate-light mb-2"><span class="text-neon">02.</span> Education
+            </h2>
+            <div class="w-24 h-0.5 bg-neon/50 mb-12"></div>
+
+            <div class="bg-navy-light rounded-xl border border-navy-lighter p-8 glow-box max-w-3xl">
+                <div class="flex items-start gap-6">
+                    <div
+                        class="w-16 h-16 rounded-lg bg-navy border border-navy-lighter flex items-center justify-center flex-shrink-0">
+                        <img src="istanbul-uni-logo.png" alt="IU Logo" class="w-12 h-12 object-contain"
+                            onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-university text-neon text-2xl\'></i>'">
+                    </div>
+                    <div>
+                        <h3 class="font-mono text-xl font-bold text-slate-light">Istanbul University</h3>
+                        <p class="font-mono text-neon text-sm mt-1">Computer Science — 3rd Year</p>
+                        <p class="text-slate text-sm mt-1"><i class="fas fa-calendar-alt mr-2"></i>2023 – Present</p>
+                        <div class="mt-4">
+                            <p class="font-mono text-sm text-slate-light mb-2">// Featured Courses:</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span
+                                    class="font-mono text-xs bg-neon/10 text-neon px-3 py-1 rounded-full border border-neon/20">Artificial
+                                    Intelligence & Machine Learning</span>
+                                <span
+                                    class="font-mono text-xs bg-neon/10 text-neon px-3 py-1 rounded-full border border-neon/20">Signal
+                                    & Image Processing</span>
+                                <span
+                                    class="font-mono text-xs bg-purple-glow/10 text-purple-glow px-3 py-1 rounded-full border border-purple-glow/20">Object-Oriented
+                                    Programming</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SKILLS SECTION (Expanded) ========== -->
+    <section id="skills" class="py-24 fade-in">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="font-mono text-3xl font-bold text-slate-light mb-2"><span class="text-neon">03.</span> Skills
+            </h2>
+            <div class="w-24 h-0.5 bg-neon/50 mb-12"></div>
+
+            <!-- Code block style design -->
+            <div class="bg-navy rounded-xl border border-navy-lighter overflow-hidden glow-box max-w-4xl">
+                <div class="flex items-center gap-2 px-4 py-3 bg-navy-light border-b border-navy-lighter">
+                    <span class="w-3 h-3 rounded-full bg-red-500"></span>
+                    <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+                    <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                    <span class="font-mono text-xs text-slate ml-2">skills.config.js</span>
+                </div>
+                <div class="p-6 font-mono text-sm space-y-3">
+                    <!-- Programming Languages -->
+                    <p class="text-slate">// Programming Languages</p>
+                    <p><span class="text-purple-glow">const</span> <span class="text-slate-light">languages</span> = [
+                    </p>
+                    <div class="flex flex-wrap gap-2 ml-4 my-2">
+                        <span
+                            class="skill-tag bg-neon/10 text-neon px-3 py-1 rounded border border-neon/20 cursor-default">"Python"</span>
+                        <span
+                            class="skill-tag bg-neon/10 text-neon px-3 py-1 rounded border border-neon/20 cursor-default">"C++"</span>
+                        <span
+                            class="skill-tag bg-neon/10 text-neon px-3 py-1 rounded border border-neon/20 cursor-default">"C"</span>
+                        <span
+                            class="skill-tag bg-neon/10 text-neon px-3 py-1 rounded border border-neon/20 cursor-default">"Java"</span>
+                        <span
+                            class="skill-tag bg-neon/10 text-neon px-3 py-1 rounded border border-neon/20 cursor-default">"SQL"</span>
+                    </div>
+                    <p>];</p>
+
+                    <!-- Libraries & Frameworks: Data Science & AI -->
+                    <p class="text-slate">// Libraries &amp; Frameworks</p>
+                    <p class="text-slate/70 ml-4 text-xs">/* Data Science &amp; AI */</p>
+                    <p><span class="text-purple-glow">const</span> <span class="text-slate-light">dataScienceLibs</span>
+                        = [</p>
+                    <div class="flex flex-wrap gap-2 ml-4 my-2">
+                        <span
+                            class="skill-tag bg-neon/10 text-neon px-3 py-1 rounded border border-neon/20 cursor-default">"Scikit-learn"</span>
+                        <span
+                            class="skill-tag bg-neon/10 text-neon px-3 py-1 rounded border border-neon/20 cursor-default">"Pandas"</span>
+                        <span
+                            class="skill-tag bg-neon/10 text-neon px-3 py-1 rounded border border-neon/20 cursor-default">"NumPy"</span>
+                    </div>
+                    <p>];</p>
+
+                    <!-- Libraries: Visualization & Interface -->
+                    <p class="text-slate/70 ml-4 text-xs">/* Visualization &amp; Interface */</p>
+                    <p><span class="text-purple-glow">const</span> <span class="text-slate-light">vizLibs</span> = [</p>
+                    <div class="flex flex-wrap gap-2 ml-4 my-2">
+                        <span
+                            class="skill-tag bg-neon/10 text-neon px-3 py-1 rounded border border-neon/20 cursor-default">"Streamlit"</span>
+                        <span
+                            class="skill-tag bg-neon/10 text-neon px-3 py-1 rounded border border-neon/20 cursor-default">"Matplotlib"</span>
+                        <span
+                            class="skill-tag bg-neon/10 text-neon px-3 py-1 rounded border border-neon/20 cursor-default">"Seaborn"</span>
+                    </div>
+                    <p>];</p>
+
+                    <!-- Development Tools -->
+                    <p class="text-slate">// Development Tools (Dev Tools)</p>
+                    <p><span class="text-purple-glow">const</span> <span class="text-slate-light">devTools</span> = {
+                    </p>
+                    <p class="ml-4 text-slate/70 text-xs">// Version Control</p>
+                    <div class="flex flex-wrap gap-2 ml-4 my-1">
+                        <span
+                            class="skill-tag bg-purple-glow/10 text-purple-glow px-3 py-1 rounded border border-purple-glow/20 cursor-default">"Git"</span>
+                        <span
+                            class="skill-tag bg-purple-glow/10 text-purple-glow px-3 py-1 rounded border border-purple-glow/20 cursor-default">"GitHub"</span>
+                    </div>
+                    <p class="ml-4 text-slate/70 text-xs">// IDE &amp; Editors</p>
+                    <div class="flex flex-wrap gap-2 ml-4 my-1">
+                        <span
+                            class="skill-tag bg-purple-glow/10 text-purple-glow px-3 py-1 rounded border border-purple-glow/20 cursor-default">"VS
+                            Code"</span>
+                        <span
+                            class="skill-tag bg-purple-glow/10 text-purple-glow px-3 py-1 rounded border border-purple-glow/20 cursor-default">"PyCharm"</span>
+                        <span
+                            class="skill-tag bg-purple-glow/10 text-purple-glow px-3 py-1 rounded border border-purple-glow/20 cursor-default">"CLion"</span>
+                        <span
+                            class="skill-tag bg-purple-glow/10 text-purple-glow px-3 py-1 rounded border border-purple-glow/20 cursor-default">"Antigravity"</span>
+                    </div>
+                    <p class="ml-4 text-slate/70 text-xs">// Operating Systems</p>
+                    <div class="flex flex-wrap gap-2 ml-4 my-1">
+                        <span
+                            class="skill-tag bg-purple-glow/10 text-purple-glow px-3 py-1 rounded border border-purple-glow/20 cursor-default">"Linux
+                            (Zorin OS, Ubuntu)"</span>
+                        <span
+                            class="skill-tag bg-purple-glow/10 text-purple-glow px-3 py-1 rounded border border-purple-glow/20 cursor-default">"Windows"</span>
+                    </div>
+                    <p>};</p>
+
+                    <!-- Database -->
+                    <p class="text-slate">// Database</p>
+                    <p><span class="text-purple-glow">const</span> <span class="text-slate-light">databases</span> = [
+                    </p>
+                    <div class="flex flex-wrap gap-2 ml-4 my-2">
+                        <span
+                            class="skill-tag bg-yellow-500/10 text-yellow-400 px-3 py-1 rounded border border-yellow-500/20 cursor-default">"MySQL"</span>
+                        <span
+                            class="skill-tag bg-yellow-500/10 text-yellow-400 px-3 py-1 rounded border border-yellow-500/20 cursor-default">"SQLite"</span>
+                    </div>
+                    <p>];</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== PROJECTS SECTION ========== -->
+    <section id="projects" class="py-24 bg-navy/50 fade-in">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="font-mono text-3xl font-bold text-slate-light mb-2"><span class="text-neon">04.</span> Projects
+            </h2>
+            <div class="w-24 h-0.5 bg-neon/50 mb-12"></div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Project 1: Synthetic Voice Analysis -->
+                <div class="card-hover bg-navy-light rounded-xl border border-navy-lighter overflow-hidden group">
+                    <div
+                        class="h-48 bg-gradient-to-br from-neon/20 via-navy to-purple-glow/20 flex items-center justify-center">
+                        <i
+                            class="fas fa-microphone-lines text-5xl text-neon/50 group-hover:text-neon transition-colors"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-mono text-lg font-bold text-slate-light">Synthetic Voice Analysis</h3>
+                            <span
+                                class="font-mono text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">Completed</span>
+                        </div>
+                        <p class="text-slate text-sm mb-4 leading-relaxed">An analysis system that distinguishes between
+                            synthetic and real voices. It processes audio signals and performs AI-based classification.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">Python</span>
+                            <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">Coqui TTS</span>
+                            <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">Whisper STT</span>
+                        </div>
+                        <div class="flex gap-4">
+                            <a href="https://github.com/ErenBalkis/Sentetik-Ses-Analizi" target="_blank"
+                                class="text-slate hover:text-neon transition-colors"><i
+                                    class="fab fa-github text-lg"></i></a>
+                            <a href="#" class="text-slate hover:text-neon transition-colors"><i
+                                    class="fas fa-external-link-alt text-lg"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2: Image Encryption -->
+                <div class="card-hover bg-navy-light rounded-xl border border-navy-lighter overflow-hidden group">
+                    <div
+                        class="h-48 bg-gradient-to-br from-purple-glow/20 via-navy to-neon/20 flex items-center justify-center">
+                        <i
+                            class="fas fa-lock text-5xl text-purple-glow/50 group-hover:text-purple-glow transition-colors"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-mono text-lg font-bold text-slate-light">Image Encryption</h3>
+                            <span
+                                class="font-mono text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">Completed</span>
+                        </div>
+                        <p class="text-slate text-sm mb-4 leading-relaxed">A security application that encrypts and
+                            decrypts image files using cryptographic algorithms.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">Python</span>
+                            <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">Cryptography</span>
+                        </div>
+                        <div class="flex gap-4">
+                            <a href="https://github.com/ErenBalkis/Image_Encryption" target="_blank"
+                                class="text-slate hover:text-neon transition-colors"><i
+                                    class="fab fa-github text-lg"></i></a>
+                            <a href="https://image-encryption-tool4you.streamlit.app/" target="_blank"
+                                class="text-slate hover:text-neon transition-colors"><i
+                                    class="fas fa-external-link-alt text-lg"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3: Machine Learning Portfolio -->
+                <div class="card-hover bg-navy-light rounded-xl border border-navy-lighter overflow-hidden group">
+                    <div
+                        class="h-48 bg-gradient-to-br from-neon/20 via-navy-light to-blue-500/20 flex items-center justify-center">
+                        <i class="fas fa-brain text-5xl text-neon/50 group-hover:text-neon transition-colors"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-mono text-lg font-bold text-slate-light">Machine Learning Portfolio</h3>
+                            <span class="font-mono text-xs bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded-full">In
+                                Progress</span>
+                        </div>
+                        <p class="text-slate text-sm mb-4 leading-relaxed">A comprehensive portfolio featuring various
+                            machine learning projects including classification, regression, and clustering.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">Python</span>
+                            <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">Scikit-learn</span>
+                            <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">Pandas</span>
+                            <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">NumPy</span>
+                            <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">Matplotlib</span>
+                            <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">Seaborn</span>
+                        </div>
+                        <div class="flex gap-4">
+                            <a href="https://github.com/ErenBalkis/Machine-Learning-Portfolio" target="_blank"
+                                class="text-slate hover:text-neon transition-colors"><i
+                                    class="fab fa-github text-lg"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4: Parking Management System -->
+                <div class="card-hover bg-navy-light rounded-xl border border-navy-lighter overflow-hidden group">
+                    <div
+                        class="h-48 bg-gradient-to-br from-blue-500/20 via-navy to-purple-glow/20 flex items-center justify-center">
+                        <i
+                            class="fas fa-car text-5xl text-purple-glow/50 group-hover:text-purple-glow transition-colors"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-mono text-lg font-bold text-slate-light">Parking Management System</h3>
+                            <span
+                                class="font-mono text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">Completed</span>
+                        </div>
+                        <p class="text-slate text-sm mb-4 leading-relaxed">A full-featured parking management
+                            application with vehicle entry/exit tracking, parking spot management, and database
+                            integration.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">C++</span>
+                        </div>
+                        <div class="flex gap-4">
+                            <a href="https://github.com/ErenBalkis/OtoparkYonetimSistemi" target="_blank"
+                                class="text-slate hover:text-neon transition-colors"><i
+                                    class="fab fa-github text-lg"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CERTIFICATES SECTION ========== -->
+    <section id="certificates" class="py-24 fade-in">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="font-mono text-3xl font-bold text-slate-light mb-2"><span class="text-neon">05.</span>
+                Certificates & Achievements</h2>
+            <div class="w-24 h-0.5 bg-neon/50 mb-12"></div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- AWS - Introduction to Generative AI -->
+                <a href="https://www.credly.com/badges/8b6bb8a9-4302-416e-9159-7082a385a4cc/public_url" target="_blank"
+                    class="card-hover bg-navy-light rounded-xl border border-navy-lighter p-6 text-center group">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-yellow-500/10 flex items-center justify-center">
+                        <i class="fab fa-aws text-2xl text-yellow-400"></i>
+                    </div>
+                    <h3
+                        class="font-mono text-sm font-bold text-slate-light mb-1 group-hover:text-neon transition-colors">
+                        Introduction to Generative AI</h3>
+                    <p class="text-slate text-xs">Amazon Web Services (AWS)</p>
+                    <span class="inline-block mt-3 font-mono text-xs text-neon/70"><i
+                            class="fas fa-external-link-alt mr-1"></i>View</span>
+                </a>
+
+                <!-- Google - Introduction to Generative AI -->
+                <a href="https://www.skills.google/public_profiles/358421df-b34e-4da9-a5d0-510d0a1aa358/badges/14070030?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share"
+                    target="_blank"
+                    class="card-hover bg-navy-light rounded-xl border border-navy-lighter p-6 text-center group">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-neon/10 flex items-center justify-center"><i
+                            class="fab fa-google text-2xl text-neon"></i></div>
+                    <h3
+                        class="font-mono text-sm font-bold text-slate-light mb-1 group-hover:text-neon transition-colors">
+                        Introduction to Generative AI</h3>
+                    <p class="text-slate text-xs">Google</p>
+                    <span class="inline-block mt-3 font-mono text-xs text-neon/70"><i
+                            class="fas fa-external-link-alt mr-1"></i>View</span>
+                </a>
+
+                <!-- Turkcell - Python Programming 401 -->
+                <a href="https://gelecegiyazanlar.turkcell.com.tr/sertifika/8a9101fe3b7646158687d74c898e4758"
+                    target="_blank"
+                    class="card-hover bg-navy-light rounded-xl border border-navy-lighter p-6 text-center group">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-purple-glow/10 flex items-center justify-center">
+                        <i class="fab fa-python text-2xl text-purple-glow"></i>
+                    </div>
+                    <h3
+                        class="font-mono text-sm font-bold text-slate-light mb-1 group-hover:text-neon transition-colors">
+                        Python Programming 401</h3>
+                    <p class="text-slate text-xs">Turkcell Geleceği Yazanlar</p>
+                    <span class="inline-block mt-3 font-mono text-xs text-neon/70"><i
+                            class="fas fa-external-link-alt mr-1"></i>View</span>
+                </a>
+
+                <!-- EF SET - English Certificate -->
+                <a href="https://cert.efset.org/en/xRr971" target="_blank"
+                    class="card-hover bg-navy-light rounded-xl border border-navy-lighter p-6 text-center group">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-500/10 flex items-center justify-center"><i
+                            class="fas fa-language text-2xl text-blue-400"></i></div>
+                    <h3
+                        class="font-mono text-sm font-bold text-slate-light mb-1 group-hover:text-neon transition-colors">
+                        EF SET English Certificate</h3>
+                    <p class="text-slate text-xs">EF SET</p>
+                    <span class="inline-block mt-3 font-mono text-xs text-neon/70"><i
+                            class="fas fa-external-link-alt mr-1"></i>View</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CONTACT SECTION ========== -->
+    <section id="contact" class="py-24 bg-navy/50 fade-in">
+        <div class="max-w-3xl mx-auto px-6 text-center">
+            <p class="font-mono text-neon text-sm mb-2">06. What's Next?</p>
+            <h2 class="font-mono text-4xl md:text-5xl font-bold text-slate-light mb-6">Get in Touch</h2>
+            <p class="text-slate mb-10 max-w-lg mx-auto leading-relaxed">Whether it's new opportunities, collaborations,
+                or just to say hello — feel free to reach out. I'll get back to you as soon as possible!</p>
+
+            <a href="mailto:erenbalkis7@gmail.com"
+                class="inline-block font-mono border-2 border-neon text-neon px-8 py-4 rounded-lg hover:bg-neon/10 transition-all text-lg mb-12">
+                Send Message <i class="fas fa-paper-plane ml-2"></i>
+            </a>
+
+            <!-- Social media links -->
+            <div class="flex justify-center gap-8 text-2xl">
+                <a href="https://www.linkedin.com/in/eren-balkis/" target="_blank"
+                    class="text-slate hover:text-neon hover:-translate-y-1 transition-all"><i
+                        class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/ErenBalkis" target="_blank"
+                    class="text-slate hover:text-neon hover:-translate-y-1 transition-all"><i
+                        class="fab fa-github"></i></a>
+                <a href="mailto:erenbalkis7@gmail.com"
+                    class="text-slate hover:text-neon hover:-translate-y-1 transition-all"><i
+                        class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="py-8 border-t border-navy-lighter">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <p class="font-mono text-sm text-slate">
+                <span class="text-neon">&lt;</span> Designed &amp; Coded with <i
+                    class="fas fa-heart text-neon text-xs"></i> by Eren Balkış
+                <span class="text-neon">/&gt;</span>
+            </p>
+            <p class="font-mono text-xs text-slate/50 mt-2">© 2026 — All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- ========== JAVASCRIPT ========== -->
+    <script>
+        // === Typewriter Effect ===
+        const phrases = [
+            "Computer Science Student",
+            "Python Developer",
+            "Tech Enthusiast",
+            "Machine Learning Explorer"
+        ];
+        let phraseIdx = 0, charIdx = 0, isDeleting = false;
+        const typeEl = document.getElementById('typewriter');
+
+        function typewrite() {
+            const current = phrases[phraseIdx];
+            typeEl.textContent = isDeleting ? current.substring(0, charIdx--) : current.substring(0, charIdx++);
+
+            if (!isDeleting && charIdx > current.length) {
+                setTimeout(() => { isDeleting = true; typewrite(); }, 1800);
+                return;
+            }
+            if (isDeleting && charIdx < 0) {
+                isDeleting = false;
+                phraseIdx = (phraseIdx + 1) % phrases.length;
+            }
+            setTimeout(typewrite, isDeleting ? 40 : 80);
+        }
+        typewrite();
+
+        // === Navbar Scroll Effect ===
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('glass', window.scrollY > 50);
+        });
+
+        // === Mobile Menu Toggle ===
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            menuBtn.querySelector('i').classList.toggle('fa-bars');
+            menuBtn.querySelector('i').classList.toggle('fa-xmark');
+        });
+        // Close mobile menu when a link is clicked
+        mobileMenu.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+        });
+
+        // === CV Dropdown Toggle ===
+        function setupCvDropdown(btnId, menuId) {
+            const btn = document.getElementById(btnId);
+            const menu = document.getElementById(menuId);
+            if (!btn || !menu) return;
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Close other dropdown
+                document.querySelectorAll('.cv-dropdown-menu').forEach(m => {
+                    if (m !== menu) m.classList.remove('show');
+                });
+                menu.classList.toggle('show');
+            });
+        }
+        setupCvDropdown('cvDropdownBtn', 'cvDropdownMenu');
+        setupCvDropdown('cvDropdownBtnMobile', 'cvDropdownMenuMobile');
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.cv-dropdown-menu').forEach(m => m.classList.remove('show'));
+        });
+        // Prevent dropdown from closing when clicking inside it
+        document.querySelectorAll('.cv-dropdown-menu').forEach(menu => {
+            menu.addEventListener('click', (e) => e.stopPropagation());
+        });
+
+        // === Section Visibility Animation (Intersection Observer) ===
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+</body>
+
+</html>
