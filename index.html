@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <!-- Meta Information -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="My personal portfolio site showcasing AI projects I developed—focused on data science, computer vision, and network monitoring—as a Computer Science student and IT intern." />
+    <meta property="og:description"
+        content="My personal portfolio site showcasing AI projects I developed—focused on data science, computer vision, and network monitoring—as a Computer Science student and IT intern." />
+    <title>Eren Balkış | Portfolio</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Tailwind Theme Configuration
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: { DEFAULT: '#0B1120', light: '#0F172A', lighter: '#1E293B' },
+                        neon: '#00D4FF',
+                        electric: '#38BDF8',
+                        slate: { light: '#E2E8F0', DEFAULT: '#94A3B8' },
+                        purple: { glow: '#a855f7' }
+                    },
+                    fontFamily: {
+                        mono: ['"JetBrains Mono"', '"Fira Code"', 'monospace'],
+                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <style>
+        /* General body style */
+        body {
+            background-color: #070D1F;
+            color: #E2E8F0;
+            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+        }
+
+        /* Canvas background */
+        #networkCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* All content above canvas */
+        .content-layer {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Neon glow effect */
+        .glow {
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5), 0 0 40px rgba(0, 212, 255, 0.15);
+        }
+
+        .glow-box {
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.05), inset 0 0 10px rgba(0, 212, 255, 0.02);
+        }
+
+        .glow-purple {
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+        }
+
+        /* Glassmorphism effect */
+        .glass {
+            background: rgba(11, 17, 32, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Nav link underline animation */
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1.5px;
+            background: linear-gradient(90deg, #00D4FF, #38BDF8);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Typewriter cursor animation */
+        .cursor-blink {
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* Scrollbar style */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #070D1F;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1E293B;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00D4FF;
+        }
+
+        /* Card hover animation */
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 15px rgba(0, 212, 255, 0.05);
+        }
+
+        /* Section transition animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.7s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Skill tag hover */
+        .skill-tag {
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            background: rgba(0, 212, 255, 0.15);
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.15);
+        }
+
+        /* Terminal dot pulse */
+        .terminal-dot {
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: 0.4
+            }
+        }
+
+        /* CV Dropdown */
+        .cv-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .cv-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            min-width: 180px;
+            background: rgba(11, 17, 32, 0.90);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 212, 255, 0.05);
+        }
+
+        .cv-dropdown-menu.show {
+            display: block;
+            animation: dropdownFade 0.2s ease;
+        }
+
+        @keyframes dropdownFade {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cv-dropdown-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #94A3B8;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .cv-dropdown-menu a:hover {
+            background: rgba(0, 212, 255, 0.1);
+            color: #00D4FF;
+        }
+
+        .cv-dropdown-menu a+a {
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        /* Magnetic button */
+        .magnetic-btn {
+            transition: transform 0.2s ease;
+        }
+
+        /* Bento Grid */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .bento-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            transition: all 0.35s ease;
+        }
+
+        .bento-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3), 0 0 18px rgba(0, 212, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .bento-span-2 {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 768px) {
+            .bento-span-2 {
+                grid-column: span 1;
+            }
+        }
+
+        /* Glowing border animation for about terminal */
+        .glow-border-hover {
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .glow-border-hover::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, #00D4FF, #a855f7, #38BDF8, #00D4FF);
+            background-size: 300% 300%;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            animation: borderRotate 3s linear infinite;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .glow-border-hover:hover::before {
+            opacity: 1;
+        }
+
+        .glow-border-hover:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(0, 212, 255, 0.12);
+        }
+
+        @keyframes borderRotate {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Tilt card for certificates */
+        .tilt-card {
+            transition: all 0.4s ease;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        .tilt-card:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 24px rgba(0, 212, 255, 0.12);
+        }
+
+        /* Certificate glowing gradient border */
+        .cert-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cert-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, transparent, #00D4FF, #a855f7, transparent);
+            background-size: 200% 200%;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            animation: borderRotate 3s linear infinite;
+        }
+
+        .cert-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Glow pulse for section headers */
+        @keyframes glowPulse {
+
+            0%,
+            100% {
+                text-shadow: 0 0 10px rgba(0, 212, 255, 0.4);
+            }
+
+            50% {
+                text-shadow: 0 0 20px rgba(0, 212, 255, 0.7), 0 0 40px rgba(0, 212, 255, 0.3);
+            }
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- ========== NETWORK CANVAS BACKGROUND ========== -->
+    <canvas id="networkCanvas"></canvas>
+
+    <!-- ========== ALL CONTENT (above canvas) ========== -->
+    <div class="content-layer">
+
+        <!-- ========== NAVIGATION BAR ========== -->
+        <nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300">
+            <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+                <!-- Logo -->
+                <a href="#hero" class="font-mono text-xl font-bold text-neon glow tracking-wider">&lt;EB /&gt;</a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#about" class="nav-link font-mono text-sm text-slate hover:text-neon transition-colors">//
+                        About</a>
+                    <a href="#experience"
+                        class="nav-link font-mono text-sm text-slate hover:text-neon transition-colors">//
+                        Experience</a>
+                    <a href="#skills" class="nav-link font-mono text-sm text-slate hover:text-neon transition-colors">//
+                        Skills</a>
+                    <a href="#projects"
+                        class="nav-link font-mono text-sm text-slate hover:text-neon transition-colors">// Projects</a>
+                    <a href="#certificates"
+                        class="nav-link font-mono text-sm text-slate hover:text-neon transition-colors">//
+                        Certificates</a>
+                    <a href="#contact"
+                        class="nav-link font-mono text-sm text-slate hover:text-neon transition-colors">// Contact</a>
+                    <div class="cv-dropdown">
+                        <button id="cvDropdownBtn"
+                            class="font-mono text-sm border border-neon/40 text-neon px-4 py-2 rounded-xl hover:bg-neon/10 hover:shadow-[0_0_15px_rgba(0,212,255,0.15)] transition-all cursor-pointer bg-transparent">Download
+                            CV <i class="fas fa-download ml-1"></i></button>
+                        <div id="cvDropdownMenu" class="cv-dropdown-menu">
+                            <a href="ErenBalkis_Ozgecmis.pdf" download="ErenBalkis_Ozgecmis.pdf"><i class="fas fa-flag"
+                                    style="color:#e30a17"></i> Türkçe</a>
+                            <a href="ErenBalkis_Resume.pdf" download="ErenBalkis_Resume.pdf"><i class="fas fa-flag"
+                                    style="color:#3c3b6e"></i> English</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="menuBtn" class="md:hidden text-neon text-2xl"><i class="fas fa-bars"></i></button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="hidden md:hidden glass px-6 pb-6">
+                <a href="#about" class="block py-2 font-mono text-sm text-slate hover:text-neon">// About</a>
+                <a href="#experience" class="block py-2 font-mono text-sm text-slate hover:text-neon">// Experience</a>
+                <a href="#skills" class="block py-2 font-mono text-sm text-slate hover:text-neon">// Skills</a>
+                <a href="#projects" class="block py-2 font-mono text-sm text-slate hover:text-neon">// Projects</a>
+                <a href="#certificates" class="block py-2 font-mono text-sm text-slate hover:text-neon">//
+                    Certificates</a>
+                <a href="#contact" class="block py-2 font-mono text-sm text-slate hover:text-neon">// Contact</a>
+                <div class="cv-dropdown">
+                    <button id="cvDropdownBtnMobile"
+                        class="inline-block mt-2 font-mono text-sm border border-neon/40 text-neon px-4 py-2 rounded-xl hover:shadow-[0_0_15px_rgba(0,212,255,0.15)] cursor-pointer bg-transparent">Download
+                        CV <i class="fas fa-download ml-1"></i></button>
+                    <div id="cvDropdownMenuMobile" class="cv-dropdown-menu" style="left:0; right:auto;">
+                        <a href="ErenBalkis_Ozgecmis.pdf" download="ErenBalkis_Ozgecmis.pdf"><i class="fas fa-flag"
+                                style="color:#e30a17"></i> Türkçe</a>
+                        <a href="ErenBalkis_Resume.pdf" download="ErenBalkis_Resume.pdf"><i class="fas fa-flag"
+                                style="color:#3c3b6e"></i> English</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- ========== HERO SECTION ========== -->
+        <section id="hero" class="min-h-screen flex items-center justify-center relative overflow-hidden">
+            <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center relative z-10">
+                <div class="order-2 md:order-1">
+                    <p class="font-mono text-neon text-sm mb-4 tracking-wider">// hello, world</p>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-light leading-tight mb-4">
+                        Hi, I'm<br><span class="text-neon glow">Eren Balkış.</span>
+                    </h1>
+                    <h2 class="font-mono text-xl md:text-2xl text-slate font-semibold mb-4">Computer Science Student &
+                        IT Intern
+                    </h2>
+
+                    <!-- Typewriter effect area -->
+                    <div class="font-mono text-lg text-slate mb-8 h-8">
+                        <span id="typewriter"></span><span class="cursor-blink text-neon">|</span>
+                    </div>
+
+                    <div class="flex gap-4 flex-wrap">
+                        <a href="#projects"
+                            class="magnetic-btn font-mono bg-transparent border border-neon/50 text-neon px-6 py-3 rounded-xl hover:bg-neon/10 transition-all text-sm">
+                            View Projects <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                        <a href="#contact"
+                            class="magnetic-btn font-mono bg-neon/10 border border-neon/30 text-neon px-6 py-3 rounded-xl hover:bg-neon/20 transition-all text-sm">
+                            Get in Touch <i class="fas fa-envelope ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Profile image area -->
+                <div class="order-1 md:order-2 flex justify-center">
+                    <div class="relative">
+                        <div
+                            class="w-64 h-64 md:w-80 md:h-80 rounded-2xl border-2 border-neon/30 overflow-hidden glow-box relative z-10 bg-navy-light">
+                            <img src="picture.png" alt="Eren Balkış" class="w-full h-full object-cover"
+                                onerror="this.style.display='none'; this.parentElement.innerHTML+='<div class=\'flex items-center justify-center w-full h-full\' ><span class=\'font-mono text-6xl text-neon glow\'>EB</span></div>'">
+                        </div>
+                        <div class="absolute -inset-2 rounded-2xl border border-neon/20 -z-0"></div>
+                        <div
+                            class="absolute -bottom-4 -right-4 w-full h-full rounded-2xl border border-purple-glow/20 -z-10">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== ABOUT ME SECTION ========== -->
+        <section id="about" class="py-24 fade-in">
+            <div class="max-w-6xl mx-auto px-6">
+                <h2 class="font-mono text-3xl font-bold text-slate-light mb-2"><span class="text-neon">01.</span> About
+                    Me
+                </h2>
+                <div class="w-24 h-0.5 bg-neon/50 mb-12"></div>
+
+                <div class="grid md:grid-cols-2 gap-12 items-start">
+                    <div class="space-y-4 text-slate leading-relaxed">
+                        <p>Hi! I'm <span class="text-neon">Eren Balkış</span>, a 4th-year <span
+                                class="text-neon">Computer Science</span> student at
+                            Istanbul University with a GPA of <span class="text-neon font-semibold">3.27</span>. My
+                            primary focus is developing functional, user-centric software products that I genuinely
+                            enjoy
+                            creating.</p>
+                        <p>I have a strong interest in <span class="text-neon">Artificial Intelligence</span> and <span
+                                class="text-neon">Cyber Security</span>, and I work on a variety of projects ranging
+                            from voice cloning (RVC/TTS) and deep learning models to image processing and
+                            cryptography.</p>
+                        <p>My foundation in algorithms, data structures, and OOP is built on Java and C++. I
+                            primarily develop and optimize applications using <span class="text-neon">Python</span>. I
+                            am comfortable developing in Linux environments and integrating open-source tools to
+                            build scalable, full-stack ML solutions.</p>
+                    </div>
+
+                    <!-- Modern Info Card -->
+                    <div class="glass-card p-8 glow-border-hover relative overflow-hidden">
+                        <div class="space-y-6">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="w-12 h-12 rounded-xl bg-neon/10 flex items-center justify-center flex-shrink-0 border border-neon/20">
+                                    <i class="fas fa-map-marker-alt text-neon text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-mono text-sm text-slate">Location</h3>
+                                    <p class="font-mono text-base font-semibold text-slate-light">Istanbul, Turkey</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div
+                                    class="w-12 h-12 rounded-xl bg-purple-glow/10 flex items-center justify-center flex-shrink-0 border border-purple-glow/20">
+                                    <i class="fas fa-university text-purple-glow text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-mono text-sm text-slate">Education</h3>
+                                    <p class="font-mono text-base font-semibold text-slate-light">Computer Science</p>
+                                    <p class="font-mono text-sm text-neon">Istanbul University</p>
+                                    <p class="font-mono text-xs text-slate-light mt-1 opacity-80">2023 – Present
+                                        &nbsp;|&nbsp; GPA: 3.27</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div
+                                    class="w-12 h-12 rounded-xl bg-electric/10 flex items-center justify-center flex-shrink-0 border border-electric/20">
+                                    <i class="fas fa-lightbulb text-electric text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-mono text-sm text-slate mb-2">Interests</h3>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span
+                                            class="font-mono text-xs bg-neon/10 text-neon px-3 py-1 rounded-full border border-neon/20">AI</span>
+                                        <span
+                                            class="font-mono text-xs bg-neon/10 text-neon px-3 py-1 rounded-full border border-neon/20">Computer
+                                            Networking</span>
+                                        <span
+                                            class="font-mono text-xs bg-neon/10 text-neon px-3 py-1 rounded-full border border-neon/20">Full-Stack
+                                            ML</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== EXPERIENCE SECTION ========== -->
+        <section id="experience" class="py-24 bg-navy/50 fade-in">
+            <div class="max-w-6xl mx-auto px-6">
+                <h2 class="font-mono text-3xl font-bold text-slate-light mb-2"><span class="text-neon">02.</span>
+                    Experience
+                </h2>
+                <div class="w-24 h-0.5 bg-neon/50 mb-12"></div>
+
+                <div class="space-y-8">
+                    <!-- Galata Wind -->
+                    <div class="glass-card p-8 glow-border-hover max-w-3xl relative overflow-hidden">
+                        <div
+                            class="absolute left-10 top-0 bottom-0 w-px bg-gradient-to-b from-neon/40 to-transparent -z-10 hidden sm:block">
+                        </div>
+                        <div class="flex items-start gap-6 relative z-10">
+                            <div
+                                class="w-16 h-16 rounded-xl bg-navy-lighter/60 border border-neon/30 flex items-center justify-center flex-shrink-0 overflow-hidden shadow-[0_0_15px_rgba(0,212,255,0.2)]">
+                                <img src="images/galata_wind.png" alt="Galata Wind Logo"
+                                    class="w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <h3 class="font-mono text-xl font-bold text-slate-light">IT and Network Intern</h3>
+                                <p class="font-mono text-neon text-sm mt-1">Galata Wind Enerji (Doğan Holding)</p>
+                                <p class="text-slate text-sm mt-2 flex items-center gap-4 flex-wrap">
+                                    <span><i class="fas fa-map-marker-alt mr-2 text-slate-light"></i>Istanbul,
+                                        Turkey</span>
+                                    <span><i class="fas fa-calendar-alt mr-2 text-slate-light"></i>August 2026 -
+                                        Present</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Outlier -->
+                    <div class="glass-card p-8 glow-border-hover max-w-3xl relative overflow-hidden">
+                        <div
+                            class="absolute left-10 top-0 bottom-0 w-px bg-gradient-to-b from-neon/40 to-transparent -z-10 hidden sm:block">
+                        </div>
+                        <div class="flex items-start gap-6 relative z-10">
+                            <div
+                                class="w-16 h-16 rounded-xl bg-navy-lighter/60 border border-purple-glow/30 flex items-center justify-center flex-shrink-0 overflow-hidden shadow-[0_0_15px_rgba(168,85,247,0.2)]">
+                                <img src="images/outlier.png" alt="Outlier Logo" class="w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <h3 class="font-mono text-xl font-bold text-slate-light">AI Training Specialist</h3>
+                                <p class="font-mono text-neon text-sm mt-1">Outlier</p>
+                                <p class="text-slate text-sm mt-2 flex items-center gap-4 flex-wrap">
+                                    <span><i class="fas fa-calendar-alt mr-2 text-slate-light"></i>May 2025 -
+                                        Present</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gini Talent -->
+                    <div class="glass-card p-8 glow-border-hover max-w-3xl relative overflow-hidden">
+                        <div
+                            class="absolute left-10 top-0 bottom-0 w-px bg-gradient-to-b from-neon/40 to-transparent -z-10 hidden sm:block">
+                        </div>
+                        <div class="flex items-start gap-6 relative z-10">
+                            <div
+                                class="w-16 h-16 rounded-xl bg-navy-lighter/60 border border-electric/30 flex items-center justify-center flex-shrink-0 overflow-hidden shadow-[0_0_15px_rgba(56,189,248,0.2)]">
+                                <img src="images/gini_talent.png" alt="Gini Talent Logo"
+                                    class="w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <h3 class="font-mono text-xl font-bold text-slate-light">Search Engine Quality
+                                    Improvement Specialist</h3>
+                                <p class="font-mono text-neon text-sm mt-1">Gini Talent</p>
+                                <p class="text-slate text-sm mt-2 flex items-center gap-4 flex-wrap">
+                                    <span><i class="fas fa-calendar-alt mr-2 text-slate-light"></i>October 2024 - June
+                                        2025</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== SKILLS SECTION (Bento Grid) ========== -->
+        <section id="skills" class="py-24 fade-in">
+            <div class="max-w-6xl mx-auto px-6">
+                <h2 class="font-mono text-3xl font-bold text-slate-light mb-2"><span class="text-neon">03.</span> Skills
+                </h2>
+                <div class="w-24 h-0.5 bg-neon/50 mb-12"></div>
+
+                <div class="bento-grid">
+                    <!-- Programming Languages — span 2 -->
+                    <div class="bento-card bento-span-2">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-neon/10 flex items-center justify-center border border-neon/20">
+                                <i class="fas fa-code text-neon" aria-hidden="true"></i>
+                            </div>
+                            <h3 class="font-mono text-sm font-bold text-slate-light">Programming Languages</h3>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-neon/10 to-neon/5 text-neon px-4 py-1.5 rounded-full border border-white/10 cursor-default">Python</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-neon/10 to-neon/5 text-neon px-4 py-1.5 rounded-full border border-white/10 cursor-default">C++</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-neon/10 to-neon/5 text-neon px-4 py-1.5 rounded-full border border-white/10 cursor-default">C</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-neon/10 to-neon/5 text-neon px-4 py-1.5 rounded-full border border-white/10 cursor-default">Java</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-neon/10 to-neon/5 text-neon px-4 py-1.5 rounded-full border border-white/10 cursor-default">SQL</span>
+                        </div>
+                    </div>
+
+                    <!-- AI & Machine Learning — span 2 -->
+                    <div class="bento-card bento-span-2">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-neon/10 flex items-center justify-center border border-neon/20">
+                                <i class="fas fa-brain text-neon" aria-hidden="true"></i>
+                            </div>
+                            <h3 class="font-mono text-sm font-bold text-slate-light">AI & Machine Learning</h3>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-neon/10 to-neon/5 text-neon px-4 py-1.5 rounded-full border border-white/10 cursor-default">Scikit-learn</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-neon/10 to-neon/5 text-neon px-4 py-1.5 rounded-full border border-white/10 cursor-default">XGBoost</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-neon/10 to-neon/5 text-neon px-4 py-1.5 rounded-full border border-white/10 cursor-default">PyTorch</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-neon/10 to-neon/5 text-neon px-4 py-1.5 rounded-full border border-white/10 cursor-default">Pandas</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-neon/10 to-neon/5 text-neon px-4 py-1.5 rounded-full border border-white/10 cursor-default">NumPy</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-neon/10 to-neon/5 text-neon px-4 py-1.5 rounded-full border border-white/10 cursor-default">OpenCV</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-neon/10 to-neon/5 text-neon px-4 py-1.5 rounded-full border border-white/10 cursor-default">LLMs</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-neon/10 to-neon/5 text-neon px-4 py-1.5 rounded-full border border-white/10 cursor-default">Computer
+                                Vision</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-neon/10 to-neon/5 text-neon px-4 py-1.5 rounded-full border border-white/10 cursor-default">Deep
+                                Learning</span>
+                        </div>
+                    </div>
+
+                    <!-- Backend & Web -->
+                    <div class="bento-card">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-electric/10 flex items-center justify-center border border-electric/20">
+                                <i class="fas fa-globe text-electric" aria-hidden="true"></i>
+                            </div>
+                            <h3 class="font-mono text-sm font-bold text-slate-light">Backend & Web</h3>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-electric/10 to-electric/5 text-electric px-4 py-1.5 rounded-full border border-white/10 cursor-default">FastAPI</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-electric/10 to-electric/5 text-electric px-4 py-1.5 rounded-full border border-white/10 cursor-default">Next.js</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-electric/10 to-electric/5 text-electric px-4 py-1.5 rounded-full border border-white/10 cursor-default">Streamlit</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-electric/10 to-electric/5 text-electric px-4 py-1.5 rounded-full border border-white/10 cursor-default">Tailwind
+                                CSS</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-electric/10 to-electric/5 text-electric px-4 py-1.5 rounded-full border border-white/10 cursor-default">REST
+                                API</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-electric/10 to-electric/5 text-electric px-4 py-1.5 rounded-full border border-white/10 cursor-default">APScheduler</span>
+                        </div>
+                    </div>
+
+                    <!-- Networking & IT -->
+                    <div class="bento-card">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center border border-green-500/20">
+                                <i class="fas fa-network-wired text-green-400" aria-hidden="true"></i>
+                            </div>
+                            <h3 class="font-mono text-sm font-bold text-slate-light">Networking & IT</h3>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-green-500/10 to-green-500/5 text-green-400 px-4 py-1.5 rounded-full border border-white/10 cursor-default">TCP/IP</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-green-500/10 to-green-500/5 text-green-400 px-4 py-1.5 rounded-full border border-white/10 cursor-default">DNS</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-green-500/10 to-green-500/5 text-green-400 px-4 py-1.5 rounded-full border border-white/10 cursor-default">DHCP</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-green-500/10 to-green-500/5 text-green-400 px-4 py-1.5 rounded-full border border-white/10 cursor-default">VLANs</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-green-500/10 to-green-500/5 text-green-400 px-4 py-1.5 rounded-full border border-white/10 cursor-default">SNMP</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-green-500/10 to-green-500/5 text-green-400 px-4 py-1.5 rounded-full border border-white/10 cursor-default">Network
+                                Monitoring</span>
+                        </div>
+                    </div>
+
+                    <!-- Data & Visuals -->
+                    <div class="bento-card">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-yellow-500/10 flex items-center justify-center border border-yellow-500/20">
+                                <i class="fas fa-chart-pie text-yellow-400" aria-hidden="true"></i>
+                            </div>
+                            <h3 class="font-mono text-sm font-bold text-slate-light">Data & Visuals</h3>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-yellow-500/10 to-yellow-500/5 text-yellow-400 px-4 py-1.5 rounded-full border border-white/10 cursor-default">MySQL</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-yellow-500/10 to-yellow-500/5 text-yellow-400 px-4 py-1.5 rounded-full border border-white/10 cursor-default">PostgreSQL</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-yellow-500/10 to-yellow-500/5 text-yellow-400 px-4 py-1.5 rounded-full border border-white/10 cursor-default">TimescaleDB</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-yellow-500/10 to-yellow-500/5 text-yellow-400 px-4 py-1.5 rounded-full border border-white/10 cursor-default">SQLite</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-yellow-500/10 to-yellow-500/5 text-yellow-400 px-4 py-1.5 rounded-full border border-white/10 cursor-default">Matplotlib</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-yellow-500/10 to-yellow-500/5 text-yellow-400 px-4 py-1.5 rounded-full border border-white/10 cursor-default">Seaborn</span>
+                        </div>
+                    </div>
+
+                    <!-- Cloud & Deployment -->
+                    <div class="bento-card">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center border border-orange-500/20">
+                                <i class="fas fa-cloud text-orange-400" aria-hidden="true"></i>
+                            </div>
+                            <h3 class="font-mono text-sm font-bold text-slate-light">Cloud & Deployment</h3>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-orange-500/10 to-orange-500/5 text-orange-400 px-4 py-1.5 rounded-full border border-white/10 cursor-default">Render</span>
+                            <span
+                                class="skill-tag font-mono text-xs bg-gradient-to-r from-orange-500/10 to-orange-500/5 text-orange-400 px-4 py-1.5 rounded-full border border-white/10 cursor-default">Vercel</span>
+                        </div>
+                    </div>
+
+                    <!-- Dev Tools — span 2 -->
+                    <div class="bento-card bento-span-2">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-purple-glow/10 flex items-center justify-center border border-purple-glow/20">
+                                <i class="fas fa-tools text-purple-glow" aria-hidden="true"></i>
+                            </div>
+                            <h3 class="font-mono text-sm font-bold text-slate-light">Development Tools</h3>
+                        </div>
+                        <div class="space-y-3">
+                            <div>
+                                <p class="font-mono text-xs text-slate/70 mb-1.5">// Version Control</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span
+                                        class="skill-tag font-mono text-xs bg-gradient-to-r from-purple-glow/10 to-purple-glow/5 text-purple-glow px-4 py-1.5 rounded-full border border-white/10 cursor-default">Git</span>
+                                    <span
+                                        class="skill-tag font-mono text-xs bg-gradient-to-r from-purple-glow/10 to-purple-glow/5 text-purple-glow px-4 py-1.5 rounded-full border border-white/10 cursor-default">GitHub</span>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="font-mono text-xs text-slate/70 mb-1.5">// IDE & Editors</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span
+                                        class="skill-tag font-mono text-xs bg-gradient-to-r from-purple-glow/10 to-purple-glow/5 text-purple-glow px-4 py-1.5 rounded-full border border-white/10 cursor-default">VS
+                                        Code</span>
+                                    <span
+                                        class="skill-tag font-mono text-xs bg-gradient-to-r from-purple-glow/10 to-purple-glow/5 text-purple-glow px-4 py-1.5 rounded-full border border-white/10 cursor-default">PyCharm</span>
+                                    <span
+                                        class="skill-tag font-mono text-xs bg-gradient-to-r from-purple-glow/10 to-purple-glow/5 text-purple-glow px-4 py-1.5 rounded-full border border-white/10 cursor-default">CLion</span>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="font-mono text-xs text-slate/70 mb-1.5">// Operating Systems</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span
+                                        class="skill-tag font-mono text-xs bg-gradient-to-r from-purple-glow/10 to-purple-glow/5 text-purple-glow px-4 py-1.5 rounded-full border border-white/10 cursor-default">Linux
+                                        (Zorin OS, Ubuntu)</span>
+                                    <span
+                                        class="skill-tag font-mono text-xs bg-gradient-to-r from-purple-glow/10 to-purple-glow/5 text-purple-glow px-4 py-1.5 rounded-full border border-white/10 cursor-default">Windows</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI-Assisted Development — span 2 -->
+                    <div class="bento-card bento-span-2">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-fuchsia-500/10 flex items-center justify-center border border-fuchsia-500/20">
+                                <i class="fas fa-wand-magic-sparkles text-fuchsia-400" aria-hidden="true"></i>
+                            </div>
+                            <h3 class="font-mono text-sm font-bold text-slate-light">AI-Assisted Development</h3>
+                        </div>
+                        <div class="space-y-3">
+                            <div>
+                                <p class="font-mono text-xs text-slate/70 mb-1.5">// AI Coding Tools</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span
+                                        class="skill-tag font-mono text-xs bg-gradient-to-r from-fuchsia-500/10 to-fuchsia-500/5 text-fuchsia-400 px-4 py-1.5 rounded-full border border-white/10 cursor-default">Antigravity</span>
+                                    <span
+                                        class="skill-tag font-mono text-xs bg-gradient-to-r from-fuchsia-500/10 to-fuchsia-500/5 text-fuchsia-400 px-4 py-1.5 rounded-full border border-white/10 cursor-default">Claude
+                                        Code</span>
+                                    <span
+                                        class="skill-tag font-mono text-xs bg-gradient-to-r from-fuchsia-500/10 to-fuchsia-500/5 text-fuchsia-400 px-4 py-1.5 rounded-full border border-white/10 cursor-default">OpenCode</span>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="font-mono text-xs text-slate/70 mb-1.5">// Practices</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span
+                                        class="skill-tag font-mono text-xs bg-gradient-to-r from-fuchsia-500/10 to-fuchsia-500/5 text-fuchsia-400 px-4 py-1.5 rounded-full border border-white/10 cursor-default">Agentic
+                                        Coding</span>
+                                    <span
+                                        class="skill-tag font-mono text-xs bg-gradient-to-r from-fuchsia-500/10 to-fuchsia-500/5 text-fuchsia-400 px-4 py-1.5 rounded-full border border-white/10 cursor-default">Prompt
+                                        Engineering</span>
+                                    <span
+                                        class="skill-tag font-mono text-xs bg-gradient-to-r from-fuchsia-500/10 to-fuchsia-500/5 text-fuchsia-400 px-4 py-1.5 rounded-full border border-white/10 cursor-default">AI
+                                        Agents</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== PROJECTS SECTION ========== -->
+        <section id="projects" class="py-24 bg-navy/50 fade-in">
+            <div class="max-w-6xl mx-auto px-6">
+                <h2 class="font-mono text-3xl font-bold text-slate-light mb-2"><span class="text-neon">04.</span>
+                    Projects
+                </h2>
+                <div class="w-24 h-0.5 bg-neon/50 mb-12"></div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Project 1: CardioRisk AI -->
+                    <div class="card-hover bg-navy-light rounded-xl border border-navy-lighter overflow-hidden group">
+                        <div
+                            class="h-48 bg-gradient-to-br from-neon/20 via-navy to-purple-glow/20 flex items-center justify-center">
+                            <i class="fas fa-heart text-5xl text-neon/50 group-hover:text-neon transition-colors"></i>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="font-mono text-lg font-bold text-slate-light">CardioRisk AI</h3>
+                                <span
+                                    class="font-mono text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">Completed</span>
+                            </div>
+                            <p class="text-slate text-sm mb-4 leading-relaxed">A full-stack machine learning web
+                                application
+                                that predicts cardiovascular risk using clinical patient data with a Logistic Regression
+                                model.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">Python</span>
+                                <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">Machine
+                                    Learning</span>
+                                <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">Next.js</span>
+                                <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">FastAPI</span>
+                            </div>
+                            <div class="flex gap-4">
+                                <a href="https://github.com/ErenBalkis/cardiorisk-ai" target="_blank"
+                                    class="text-slate hover:text-neon transition-colors"><i
+                                        class="fab fa-github text-lg"></i></a>
+                                <a href="https://cardiorisk-ai.vercel.app/" target="_blank"
+                                    class="text-slate hover:text-neon transition-colors"><i
+                                        class="fas fa-external-link-alt text-lg"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 2: Smart Transit AI -->
+                    <div class="card-hover bg-navy-light rounded-xl border border-navy-lighter overflow-hidden group">
+                        <div
+                            class="h-48 bg-gradient-to-br from-blue-500/20 via-navy to-neon/20 flex items-center justify-center">
+                            <i class="fas fa-bus text-5xl text-neon/50 group-hover:text-neon transition-colors"></i>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="font-mono text-lg font-bold text-slate-light">Smart Transit AI</h3>
+                                <span
+                                    class="font-mono text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">Completed</span>
+                            </div>
+                            <p class="text-slate text-sm mb-4 leading-relaxed">AI-powered smart city crowd management
+                                system
+                                utilizing CSRNet density map regression. It monitors transit stop overcrowding in
+                                real-time
+                                and automates dynamic bus dispatch to optimize public transportation infrastructure.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">Computer
+                                    Vision</span>
+                                <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">Deep
+                                    Learning</span>
+                                <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">PyTorch</span>
+                                <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">CSRNet</span>
+                                <span
+                                    class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">Streamlit</span>
+                            </div>
+                            <div class="flex gap-4">
+                                <a href="https://github.com/ErenBalkis/Smart_Transit_AI" target="_blank"
+                                    class="text-slate hover:text-neon transition-colors"><i
+                                        class="fab fa-github text-lg"></i></a>
+                                <a href="https://huggingface.co/spaces/ErenBalkis/SmartTransit-AI" target="_blank"
+                                    class="text-slate hover:text-neon transition-colors"><i
+                                        class="fas fa-external-link-alt text-lg"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 3: RVC TTS Studio -->
+                    <div class="card-hover bg-navy-light rounded-xl border border-navy-lighter overflow-hidden group">
+                        <div
+                            class="h-48 bg-gradient-to-br from-purple-glow/20 via-navy to-neon/20 flex items-center justify-center">
+                            <i
+                                class="fas fa-microphone text-5xl text-purple-glow/50 group-hover:text-purple-glow transition-colors"></i>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="font-mono text-lg font-bold text-slate-light">RVC TTS Studio</h3>
+                                <span
+                                    class="font-mono text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">Completed</span>
+                            </div>
+                            <p class="text-slate text-sm mb-4 leading-relaxed">An interactive web application that
+                                converts
+                                text into custom voices using edge-tts and Retrieval-based Voice Conversion (RVC).</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">Python</span>
+                                <span
+                                    class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">Streamlit</span>
+                                <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">RVC</span>
+                                <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">PyTorch</span>
+                            </div>
+                            <div class="flex gap-4">
+                                <a href="https://github.com/ErenBalkis/rvc-tts-studio" target="_blank"
+                                    class="text-slate hover:text-neon transition-colors"><i
+                                        class="fab fa-github text-lg"></i></a>
+                                <a href="https://huggingface.co/spaces/ErenBalkis/rvc-tts-studio" target="_blank"
+                                    class="text-slate hover:text-neon transition-colors" title="Live demo"><i
+                                        class="fas fa-external-link-alt text-lg"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 4: Forest Fire Prediction -->
+                    <div class="card-hover bg-navy-light rounded-xl border border-navy-lighter overflow-hidden group">
+                        <div
+                            class="h-48 bg-gradient-to-br from-blue-500/20 via-navy to-purple-glow/20 flex items-center justify-center">
+                            <i
+                                class="fas fa-tree text-5xl text-purple-glow/50 group-hover:text-purple-glow transition-colors"></i>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="font-mono text-lg font-bold text-slate-light">Forest Fire Prediction</h3>
+                                <span
+                                    class="font-mono text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">Completed</span>
+                            </div>
+                            <p class="text-slate text-sm mb-4 leading-relaxed">A machine learning study predicting the
+                                burned area of forest fires using meteorological data, FWIs, and custom physics-based
+                                features.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">Python</span>
+                                <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">Machine
+                                    Learning</span>
+                                <span class="font-mono text-xs text-neon/80 bg-neon/5 px-2 py-1 rounded">XGBoost</span>
+                            </div>
+                            <div class="flex gap-4">
+                                <a href="https://github.com/ErenBalkis/Machine-Learning-Portfolio/tree/main/Forest_Fire_Prediction_Project"
+                                    target="_blank" class="text-slate hover:text-neon transition-colors"><i
+                                        class="fab fa-github text-lg"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== CERTIFICATES SECTION ========== -->
+        <section id="certificates" class="py-24 fade-in">
+            <div class="max-w-6xl mx-auto px-6">
+                <h2 class="font-mono text-3xl font-bold text-slate-light mb-2"><span class="text-neon">05.</span>
+                    Certificates & Achievements</h2>
+                <div class="w-24 h-0.5 bg-neon/50 mb-12"></div>
+
+                <!-- Row 1: 4 certificates -->
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6" style="perspective: 800px;">
+                    <!-- Kaggle - Intermediate Machine Learning -->
+                    <a href="https://www.kaggle.com/learn/certification/erenbalk/intermediate-machine-learning"
+                        target="_blank"
+                        class="tilt-card cert-card bg-navy-light rounded-xl border border-navy-lighter p-6 text-center group block">
+                        <div
+                            class="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-400/10 flex items-center justify-center">
+                            <i class="fab fa-kaggle text-2xl text-blue-400"></i>
+                        </div>
+                        <h3
+                            class="font-mono text-sm font-bold text-slate-light mb-1 group-hover:text-neon transition-colors">
+                            Intermediate Machine Learning</h3>
+                        <p class="text-slate text-xs">Kaggle</p>
+                        <span class="inline-block mt-3 font-mono text-xs text-neon/70 magnetic-btn"><i
+                                class="fas fa-external-link-alt mr-1"></i>View</span>
+                    </a>
+
+                    <!-- DataCamp - SQL -->
+                    <a href="https://www.datacamp.com/completed/statement-of-accomplishment/course/b3bc7f2fa050695bba8cc6b977690d9f2eb4da86"
+                        target="_blank"
+                        class="tilt-card cert-card bg-navy-light rounded-xl border border-navy-lighter p-6 text-center group block">
+                        <div
+                            class="w-16 h-16 mx-auto mb-4 rounded-full bg-green-500/10 flex items-center justify-center">
+                            <i class="fas fa-database text-2xl text-green-400"></i>
+                        </div>
+                        <h3
+                            class="font-mono text-sm font-bold text-slate-light mb-1 group-hover:text-neon transition-colors">
+                            Intermediate SQL</h3>
+                        <p class="text-slate text-xs">DataCamp</p>
+                        <span class="inline-block mt-3 font-mono text-xs text-neon/70 magnetic-btn"><i
+                                class="fas fa-external-link-alt mr-1"></i>View</span>
+                    </a>
+
+                    <!-- Cisco - Networking Basics -->
+                    <a href="https://www.credly.com/badges/bb0cabf3-60b2-48de-a862-134a305fe04d/public_url"
+                        target="_blank"
+                        class="tilt-card cert-card bg-navy-light rounded-xl border border-navy-lighter p-6 text-center group block">
+                        <div
+                            class="w-16 h-16 mx-auto mb-4 rounded-full bg-cyan-400/10 flex items-center justify-center">
+                            <i class="fas fa-network-wired text-2xl text-cyan-400"></i>
+                        </div>
+                        <h3
+                            class="font-mono text-sm font-bold text-slate-light mb-1 group-hover:text-neon transition-colors">
+                            Networking Basics</h3>
+                        <p class="text-slate text-xs">Cisco</p>
+                        <span class="inline-block mt-3 font-mono text-xs text-neon/70 magnetic-btn"><i
+                                class="fas fa-external-link-alt mr-1"></i>View</span>
+                    </a>
+
+                    <!-- AWS -  Machine Learning Foundations -->
+                    <a href="https://www.credly.com/badges/69e74c82-beb5-4873-9a90-11d1887922e7/public_url"
+                        target="_blank"
+                        class="tilt-card cert-card bg-navy-light rounded-xl border border-navy-lighter p-6 text-center group block">
+                        <div
+                            class="w-16 h-16 mx-auto mb-4 rounded-full bg-yellow-500/10 flex items-center justify-center">
+                            <i class="fab fa-aws text-2xl text-yellow-400"></i>
+                        </div>
+                        <h3
+                            class="font-mono text-sm font-bold text-slate-light mb-1 group-hover:text-neon transition-colors">
+                            Machine Learning Foundations</h3>
+                        <p class="text-slate text-xs">Amazon Web Services (AWS)</p>
+                        <span class="inline-block mt-3 font-mono text-xs text-neon/70 magnetic-btn"><i
+                                class="fas fa-external-link-alt mr-1"></i>View</span>
+                    </a>
+
+                </div>
+
+                <!-- Row 2: 3 certificates centered -->
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto" style="perspective: 800px;">
+
+                    <!-- Turkcell GY - Python Programming 401 -->
+                    <a href="https://gelecegiyazanlar.turkcell.com.tr/sertifika/8a9101fe3b7646158687d74c898e4758"
+                        target="_blank"
+                        class="tilt-card cert-card bg-navy-light rounded-xl border border-navy-lighter p-6 text-center group block">
+                        <div
+                            class="w-16 h-16 mx-auto mb-4 rounded-full bg-yellow-400/10 flex items-center justify-center">
+                            <i class="fab fa-python text-2xl text-yellow-400" aria-hidden="true"></i>
+                        </div>
+                        <h3
+                            class="font-mono text-sm font-bold text-slate-light mb-1 group-hover:text-neon transition-colors">
+                            Python Programming 401</h3>
+                        <p class="text-slate text-xs">Turkcell GY</p>
+                        <span class="inline-block mt-3 font-mono text-xs text-neon/70 magnetic-btn"><i
+                                class="fas fa-external-link-alt mr-1"></i>View</span>
+                    </a>
+
+                    <!-- Cisco - Introduction to Cybersecurity -->
+                    <a href="https://www.credly.com/badges/f4602260-83d3-40d7-a200-34cb87822e15/public_url"
+                        target="_blank"
+                        class="tilt-card cert-card bg-navy-light rounded-xl border border-navy-lighter p-6 text-center group block">
+                        <div
+                            class="w-16 h-16 mx-auto mb-4 rounded-full bg-purple-500/10 flex items-center justify-center">
+                            <i class="fas fa-shield-halved text-2xl text-purple-400" aria-hidden="true"></i>
+                        </div>
+                        <h3
+                            class="font-mono text-sm font-bold text-slate-light mb-1 group-hover:text-neon transition-colors">
+                            Introduction to Cybersecurity</h3>
+                        <p class="text-slate text-xs">Cisco</p>
+                        <span class="inline-block mt-3 font-mono text-xs text-neon/70 magnetic-btn"><i
+                                class="fas fa-external-link-alt mr-1"></i>View</span>
+                    </a>
+
+                    <!-- Google Cloud Skills Boost - Introduction to AI Agents -->
+                    <a href="https://www.skills.google/public_profiles/faabbdd5-76ef-4a11-964a-aebb002812fc/badges/22227222?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share"
+                        target="_blank"
+                        class="tilt-card cert-card bg-navy-light rounded-xl border border-navy-lighter p-6 text-center group block">
+                        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/10 flex items-center justify-center">
+                            <i class="fab fa-google text-2xl text-red-400" aria-hidden="true"></i>
+                        </div>
+                        <h3
+                            class="font-mono text-sm font-bold text-slate-light mb-1 group-hover:text-neon transition-colors">
+                            Introduction to AI Agents</h3>
+                        <p class="text-slate text-xs">Google Cloud Skills Boost</p>
+                        <span class="inline-block mt-3 font-mono text-xs text-neon/70 magnetic-btn"><i
+                                class="fas fa-external-link-alt mr-1"></i>View</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== CONTACT SECTION ========== -->
+        <section id="contact" class="py-24 bg-navy/50 fade-in">
+            <div class="max-w-3xl mx-auto px-6 text-center">
+                <p class="font-mono text-neon text-sm mb-2">06. What's Next?</p>
+                <h2 class="font-mono text-4xl md:text-5xl font-bold text-slate-light mb-6">Get in Touch</h2>
+                <p class="text-slate mb-10 max-w-lg mx-auto leading-relaxed">Whether it's new opportunities,
+                    collaborations,
+                    or just to say hello — feel free to reach out. I'll get back to you as soon as possible!</p>
+
+                <a href="mailto:erenbalkis7@gmail.com"
+                    class="magnetic-btn inline-block font-mono border-2 border-neon text-neon px-8 py-4 rounded-lg hover:bg-neon/10 transition-all text-lg mb-12">
+                    Send Message <i class="fas fa-paper-plane ml-2"></i>
+                </a>
+
+                <!-- Social media links -->
+                <div class="flex justify-center gap-8 text-2xl">
+                    <a href="https://www.linkedin.com/in/eren-balkis/" target="_blank"
+                        class="text-slate hover:text-neon hover:-translate-y-1 transition-all"><i
+                            class="fab fa-linkedin"></i></a>
+                    <a href="https://github.com/ErenBalkis" target="_blank"
+                        class="text-slate hover:text-neon hover:-translate-y-1 transition-all"><i
+                            class="fab fa-github"></i></a>
+                    <a href="mailto:erenbalkis7@gmail.com"
+                        class="text-slate hover:text-neon hover:-translate-y-1 transition-all"><i
+                            class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== FOOTER ========== -->
+        <footer class="py-8 border-t border-navy-lighter">
+            <div class="max-w-6xl mx-auto px-6 text-center">
+                <p class="font-mono text-sm text-slate">
+                    <span class="text-neon">&lt;</span> Designed & Coded with <i
+                        class="fas fa-heart text-neon text-xs"></i> by Eren Balkış
+                    <span class="text-neon">/&gt;</span>
+                </p>
+                <p class="font-mono text-xs text-slate/50 mt-2">© 2026 — All rights reserved.</p>
+            </div>
+        </footer>
+
+    </div><!-- end content-layer -->
+
+    <!-- ========== JAVASCRIPT ========== -->
+    <script>
+            // ============================================
+            // === NETWORK TOPOLOGY CANVAS ANIMATION ===
+            // ============================================
+            (function () {
+                const canvas = document.getElementById('networkCanvas');
+                const ctx = canvas.getContext('2d');
+                let width, height;
+                let mouse = { x: -9999, y: -9999 };
+                let clickGlow = 1;
+                const NODE_COUNT = 120;
+                const CONNECTION_DIST = 180;
+                const MOUSE_RADIUS = 200;
+                const nodes = [];
+
+                function resize() {
+                    width = canvas.width = window.innerWidth;
+                    height = canvas.height = window.innerHeight;
+                }
+                window.addEventListener('resize', resize);
+                resize();
+
+                // Track mouse — need pointer-events on document, not canvas
+                document.addEventListener('mousemove', (e) => {
+                    mouse.x = e.clientX;
+                    mouse.y = e.clientY;
+                });
+                document.addEventListener('mouseleave', () => {
+                    mouse.x = -9999;
+                    mouse.y = -9999;
+                });
+
+                // Click burst
+                document.addEventListener('click', () => {
+                    clickGlow = 3;
+                    for (const node of nodes) {
+                        node.vx += (Math.random() - 0.5) * 6;
+                        node.vy += (Math.random() - 0.5) * 6;
+                    }
+                });
+
+                // Create nodes
+                for (let i = 0; i < NODE_COUNT; i++) {
+                    nodes.push({
+                        x: Math.random() * (width || window.innerWidth),
+                        y: Math.random() * (height || window.innerHeight),
+                        vx: (Math.random() - 0.5) * 1.5,
+                        vy: (Math.random() - 0.5) * 1.5,
+                        baseRadius: 1.5 + Math.random() * 2.5
+                    });
+                }
+
+                function animate() {
+                    ctx.clearRect(0, 0, width, height);
+
+                    // Decay click glow
+                    if (clickGlow > 1) {
+                        clickGlow *= 0.96;
+                        if (clickGlow < 1.01) clickGlow = 1;
+                    }
+
+                    // Update node positions
+                    for (const node of nodes) {
+                        // Mouse attraction
+                        const dx = mouse.x - node.x;
+                        const dy = mouse.y - node.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < MOUSE_RADIUS && dist > 0) {
+                            const force = (MOUSE_RADIUS - dist) / MOUSE_RADIUS * 0.015;
+                            node.vx += dx / dist * force;
+                            node.vy += dy / dist * force;
+                        }
+
+                        // Apply velocity with damping
+                        node.vx *= 0.995;
+                        node.vy *= 0.995;
+
+                        // Speed cap
+                        const speed = Math.sqrt(node.vx * node.vx + node.vy * node.vy);
+                        const maxSpeed = clickGlow > 1.5 ? 4 : 2;
+                        if (speed > maxSpeed) {
+                            node.vx = (node.vx / speed) * maxSpeed;
+                            node.vy = (node.vy / speed) * maxSpeed;
+                        }
+
+                        node.x += node.vx;
+                        node.y += node.vy;
+
+                        // Bounce off edges
+                        if (node.x < 0) { node.x = 0; node.vx *= -1; }
+                        if (node.x > width) { node.x = width; node.vx *= -1; }
+                        if (node.y < 0) { node.y = 0; node.vy *= -1; }
+                        if (node.y > height) { node.y = height; node.vy *= -1; }
+                    }
+
+                    // Draw connections
+                    for (let i = 0; i < nodes.length; i++) {
+                        for (let j = i + 1; j < nodes.length; j++) {
+                            const dx = nodes[i].x - nodes[j].x;
+                            const dy = nodes[i].y - nodes[j].y;
+                            const dist = Math.sqrt(dx * dx + dy * dy);
+                            if (dist < CONNECTION_DIST) {
+                                const opacity = (1 - dist / CONNECTION_DIST) * 0.35 * Math.min(clickGlow, 2);
+                                ctx.beginPath();
+                                ctx.moveTo(nodes[i].x, nodes[i].y);
+                                ctx.lineTo(nodes[j].x, nodes[j].y);
+                                ctx.strokeStyle = `rgba(56, 189, 248, ${opacity})`;
+                                ctx.lineWidth = 0.6;
+                                ctx.stroke();
+                            }
+                        }
+                    }
+
+                    // Draw nodes
+                    for (const node of nodes) {
+                        const r = node.baseRadius * Math.min(clickGlow, 2);
+                        const glowAlpha = 0.7 * Math.min(clickGlow, 2.5);
+
+                        // Outer glow
+                        const gradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, r * 4);
+                        gradient.addColorStop(0, `rgba(0, 212, 255, ${glowAlpha * 0.4})`);
+                        gradient.addColorStop(1, 'rgba(0, 212, 255, 0)');
+                        ctx.beginPath();
+                        ctx.arc(node.x, node.y, r * 4, 0, Math.PI * 2);
+                        ctx.fillStyle = gradient;
+                        ctx.fill();
+
+                        // Core
+                        ctx.beginPath();
+                        ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
+                        const coreR = clickGlow > 1.5 ? 200 : 0;
+                        const coreG = clickGlow > 1.5 ? 240 : 212;
+                        const coreB = 255;
+                        ctx.fillStyle = `rgba(${coreR}, ${coreG}, ${coreB}, ${glowAlpha})`;
+                        ctx.fill();
+                    }
+
+                    requestAnimationFrame(animate);
+                }
+                animate();
+            })();
+
+        // ============================================
+        // === TYPEWRITER EFFECT ===
+        // ============================================
+        const phrases = [
+            "Computer Science Student",
+            "IT Intern"
+        ];
+        let phraseIdx = 0, charIdx = 0, isDeleting = false;
+        const typeEl = document.getElementById('typewriter');
+
+        function typewrite() {
+            const current = phrases[phraseIdx];
+            typeEl.textContent = isDeleting ? current.substring(0, charIdx--) : current.substring(0, charIdx++);
+
+            if (!isDeleting && charIdx > current.length) {
+                setTimeout(() => { isDeleting = true; typewrite(); }, 1800);
+                return;
+            }
+            if (isDeleting && charIdx < 0) {
+                isDeleting = false;
+                phraseIdx = (phraseIdx + 1) % phrases.length;
+            }
+            setTimeout(typewrite, isDeleting ? 40 : 80);
+        }
+        typewrite();
+
+        // ============================================
+        // === NAVBAR SCROLL EFFECT ===
+        // ============================================
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('glass', window.scrollY > 50);
+        });
+
+        // ============================================
+        // === MOBILE MENU TOGGLE ===
+        // ============================================
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            menuBtn.querySelector('i').classList.toggle('fa-bars');
+            menuBtn.querySelector('i').classList.toggle('fa-xmark');
+        });
+        // Close mobile menu when a link is clicked
+        mobileMenu.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+        });
+
+        // ============================================
+        // === CV DROPDOWN TOGGLE ===
+        // ============================================
+        function setupCvDropdown(btnId, menuId) {
+            const btn = document.getElementById(btnId);
+            const menu = document.getElementById(menuId);
+            if (!btn || !menu) return;
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Close other dropdown
+                document.querySelectorAll('.cv-dropdown-menu').forEach(m => {
+                    if (m !== menu) m.classList.remove('show');
+                });
+                menu.classList.toggle('show');
+            });
+        }
+        setupCvDropdown('cvDropdownBtn', 'cvDropdownMenu');
+        setupCvDropdown('cvDropdownBtnMobile', 'cvDropdownMenuMobile');
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.cv-dropdown-menu').forEach(m => m.classList.remove('show'));
+        });
+        // Prevent dropdown from closing when clicking inside it
+        document.querySelectorAll('.cv-dropdown-menu').forEach(menu => {
+            menu.addEventListener('click', (e) => e.stopPropagation());
+        });
+
+        // ============================================
+        // === SECTION VISIBILITY ANIMATION ===
+        // ============================================
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // ============================================
+        // === MAGNETIC BUTTON EFFECT ===
+        // ============================================
+        document.querySelectorAll('.magnetic-btn').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = 'translate(0, 0)';
+            });
+        });
+
+        // ============================================
+        // === CERTIFICATE CARD 3D TILT ===
+        // ============================================
+        document.querySelectorAll('.tilt-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / centerY * -12;
+                const rotateY = (x - centerX) / centerX * 12;
+                card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(600px) rotateX(0) rotateY(0) translateY(0)';
+            });
+        });
+    </script>
+</body>
+
+</html>
